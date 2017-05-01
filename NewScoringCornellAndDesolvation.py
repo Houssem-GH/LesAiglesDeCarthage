@@ -352,8 +352,8 @@ computeChargesVdW(dPDB, dcharge, dvdw, depsilon, chain2)
 #sys.exit()
 Ener = compEner(dPDB, chain1, chain2)
 
-out = open("ener.out","a")
-out.write("%s            %s\n"%(infile, Ener))
+out = open("NewScoringCornellAndDesolvation.out","a")
+out.write("%s : %s\n"%(infile, Ener))
 out.close()
 print "Ener ", Ener
 

@@ -8,9 +8,6 @@ Description: Programme principale qui:
 -Calcule les RMSD
 """
 
-
-
-
 import random, math, numpy, string, sys, glob, os
 from pylab import *
 import structureTools, ForceField3,usage
@@ -22,7 +19,7 @@ import structureTools, ForceField3,usage
 try:
     indir = sys.argv[sys.argv.index("-in")+1]
 except:    
-    usage.usage()
+    usage.usage1()
     print "ERROR: please, enter the name of the directory input"
     sys.exit()
 
@@ -30,8 +27,9 @@ except:
 #repertoire de sortie a creer des resultats du calcul de scoring
 try:
     outdir = sys.argv[sys.argv.index("-out")+1]
+    longeur= len(outdir)+24
 except:    
-    usage.usage()
+    usage.usage1()
     print "ERROR: please, enter the name of the directory output"
     sys.exit()
 
@@ -39,19 +37,25 @@ except:
 #le programme de scoring a executer 
 try:
     Program_Scoring = sys.argv[sys.argv.index("-prog")+1]
+    if  Program_Scoring not in ("NewScoringCornell.py","NewScoringCornellAndDesolvation.py","OldScoringCornellAndDesolvation.py"):
+		sys.exit() 
 except:    
-    usage.usage()
-    print "ERROR: please, enter the name of the program to execute"
+    usage.usage1()
+    print "ERROR: please, enter the name of the program to execute among the available programs"
     sys.exit()
 
+
+#le fichier pdb du recepteur natif
 try:
     Receptor = sys.argv[sys.argv.index("-pdbR")+1]
     #Rec_natif_DP.pdb
 except:    
-    usage.usage()
+    usage.usage1()
     print "ERROR: please, enter the name of the receptor file"
     sys.exit()
 
+
+#le fichier pdb du complexe natif
 try:
     Complex = sys.argv[sys.argv.index("-pdbC")+1]
     #cplx_natif.pdb
@@ -59,48 +63,75 @@ except:
 	Complex = ""
 
 
+#la chaine d'acide amine du recepteur
+try:
+    chaineRec = sys.argv[sys.argv.index("-chainRec")+1]
+    #B
+except:    
+    usage.usage1()
+    print "ERROR: please, enter the pdb name of the chain of the receptor"
+    sys.exit()
+
+
+#la chaine d'acide amine du Ligand
+try:
+    chaineLig = sys.argv[sys.argv.index("-chainLig")+1]
+    #D
+except:    
+    usage.usage1()
+    print "ERROR: please, enter the pdb name of the chain of the ligand"
+    sys.exit()
 
 
 
 
-filelist = glob.glob("%s/*DP.pdb"%(indir)) #recuperer les noms des fichiers correspondant aux coordonnees du ligand dans une liste
-
-
-os.system("rm -rf %s"%(outdir)) #suprimer la repertoire de sortie si elle existe
-
-
-os.system("mkdir %s"%(outdir)) #creer la repertoire de sortie
 
 
 
-#boucle de calcul de score de chaque fichier correspondant aux coordonnees du ligand par rapport au recepteur 
+#recuperer les noms des fichiers correspondant aux coordonnees du ligand dans une liste
+filelist = glob.glob("%s/*DP.pdb"%(indir)) 
+
+#suprimer le repertoire de sortie si elle existe
+os.system("rm -rf %s"%(outdir)) 
+
+#creer le repertoire de sortie
+os.system("mkdir %s"%(outdir)) 
+
+#creer le repertoire fichier pdb des complexes theoriques
+os.system("mkdir %s/Rec_Lig_PDB"%(outdir)) 
+
+
+#boucle de calcul de score de chaque fichier correspondant aux coordonnees du ligand par rapport au recepteur
 #qui lui est fixe (Ex:fichier PDB: Rec_natif_DP)
 for pdb in filelist : 
     num = pdb.split("/")[-1].split("_")[-2]
     curpdb = "rec_nat_lig_%s.pdb"%(num)
-    os.system("cat %s %s > %s/%s"%(Receptor, pdb,outdir, curpdb))
-    os.system("python %s -pdb %s/%s -chain1 B -chain2 D"%(Program_Scoring, outdir,curpdb))
+    os.system("cat %s %s > %s/Rec_Lig_PDB/%s"%(Receptor, pdb,outdir, curpdb))
+    os.system("python %s -pdb %s/Rec_Lig_PDB/%s -chain1 %s -chain2 %s"%(Program_Scoring, outdir,curpdb,chaineRec,chaineLig))
  
-
-#mettre les resultats de calcul de scoring dans Eners.out   
-os.system("cat ener.out >> %s/Eners.out  > %s/Eners.out"%(outdir,outdir))
-os.system("rm -f ener.out") #supprimer le fichier de score temporaire
-
-
-nonTrier = "%s/Eners.out"%(outdir) #recuperer les donnees de Scoring dans un nouveau fichier nonTrier
-
-
+#recuperer les donnees de Scoring dans un nouveau fichier nonTrier
+if Program_Scoring == "NewScoringCornell.py":
+	nonTrier = "NewScoringCornell.out" 
+elif Program_Scoring == "NewScoringCornellAndDesolvation.py":
+	nonTrier = "NewScoringCornellAndDesolvation.out"
+else:
+	nonTrier = "OldScoringCornellAndDesolvation.out"
 #lecture du fichier nonTrier
 f = open(nonTrier, "r")
 lines = f.readlines()
 f.close()
 
+#supprimer le fichier non trie
+os.system("rm -f %s"%(nonTrier)) 
+
+
 
 #Stocker les resultats dans un dictionnaire
 dicoNT= {}
 for line in lines:
-	cle= "%s"%(line[0:24]).strip()
-	valeur = float(line[28:50])
+	line = line.split("/")[2]
+	cle,valeur= line.split(" : ") 
+	valeur = float(valeur)
 	dicoNT[cle] = valeur
 	
 
@@ -112,25 +143,27 @@ ListT=sorted(dicoNT.items(), key=lambda t: t[1])
 f_out = open("%s/Scoring"%(outdir),"w")
 
 for res in ListT:	
-	f_out.write("%s    %f\n"%(res[0],res[1]))
+	f_out.write("%s : %f\n"%(res[0],res[1]))
 	
 f_out.close()
 
 
 #Creer le fichier du complex Recepteur-ligand selon la methode de calcul 
 if Program_Scoring == "NewScoringCornell.py":
-	os.system("cat %s > %s/complexe_predit_score1.pdb "%(ListT[0][0],outdir))
+	os.system("cat %s/Rec_Lig_PDB/%s > %s/complexe_predit_score1.pdb "%(outdir,ListT[0][0],outdir))
 	pdbinfile = "%s/complexe_predit_score1.pdb"%(outdir)
 	
 elif Program_Scoring == "NewScoringCornellAndDesolvation.py":
-	os.system("cat %s > %s/complexe_predit_score2.pdb "%(ListT[0][0],outdir))
+	os.system("cat %s/Rec_Lig_PDB/%s > %s/complexe_predit_score2.pdb "%(outdir,ListT[0][0],outdir))
 	pdbinfile = "%s/complexe_predit_score2.pdb"%(outdir)
 	
 elif Program_Scoring == "OldScoringCornellAndDesolvation.py":
-	os.system("cat %s > %s/complexe_predit_score3.pdb "%(ListT[0][0],outdir))
+	os.system("cat %s/Rec_Lig_PDB/%s > %s/complexe_predit_score3.pdb "%(outdir,ListT[0][0],outdir))
 	pdbinfile = "%s/complexe_predit_score3.pdb"%(outdir)
 
+
 ########################
+
 
 if Complex <> "" :
 #Caclul de RMSD
@@ -141,17 +174,17 @@ if Complex <> "" :
 
 	dPDB_Lig_Natif={}
 	dPDB_Lig_Natif["chains"] = []
-	dPDB_Lig_Natif["chains"].append("D")
+	dPDB_Lig_Natif["chains"].append(chaineLig)
 
 	dPDB_Lig_BestScore={}
 	dPDB_Lig_BestScore["chains"] = []
-	dPDB_Lig_BestScore["chains"].append("D")
+	dPDB_Lig_BestScore["chains"].append(chaineLig)
 
-	dPDB_Lig_Natif["D"] = dPDB_Cplx_Natif["D"]
-	dPDB_Lig_BestScore["D"] = dPDB_Cplx_BestScore["D"]
+	dPDB_Lig_Natif[chaineLig] = dPDB_Cplx_Natif[chaineLig]
+	dPDB_Lig_BestScore[chaineLig] = dPDB_Cplx_BestScore[chaineLig]
 
 
-	dPDB_Interface_Natif = structureTools.InterfacePDB(dPDB_Cplx_Natif , 5.0 , "atom", "B" , "D")
+	dPDB_Interface_Natif = structureTools.InterfacePDB(dPDB_Cplx_Natif , 5.0 , "atom", chaineRec , chaineLig)
 
 				
 

@@ -54,7 +54,7 @@ def RMSD (dPDB1,dPDB2,mode=all):
 
 
 def InterfacePDB(dPDB, threshold,mode,chain1,chain2) :
-#prend en argument un pdb parcé dans un dictionnaire, 
+#prend en argument un pdb parce dans un dictionnaire, 
 #un seuil de distance qui definie si un element fait 
 #partie de l'interface ou non (element definie par mode),
 #la distance est calcule entre les atomes issus de chain1 et chain2
