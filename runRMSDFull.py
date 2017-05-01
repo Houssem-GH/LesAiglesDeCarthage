@@ -3,9 +3,8 @@
 
 #Author: GHARBI Houssem / Timothee O'Donnell
 """
-Description: Programme principale qui:
--Calcule les scores des solutions fournis en argument
--Calcule les RMSD
+Description: Programme qui:
+- calcule RMSD pour toutes les solutions et rend un fichier trier par ordre croissant 
 """
 
 import random, math, numpy, string, sys, glob, os
