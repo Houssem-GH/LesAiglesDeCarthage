@@ -13,7 +13,8 @@ Il y a trois 3 algorithmes de scoring differents qui devront etre preciser en ar
 Un second programme calcule les RMSDFull.py entre le complexe natif en fichier pdb et les differentes solutions presentes dans le repertoire fourni en argument, ce programme determine si la meilleur solution a été trouver par l'un des algorithmes.
 On note que ce programme n'est executable que s'il on a le complexe natif.
  
-#Argument runScoring.py
+#Argument et output runScoring.py:
+
 Pour executer ce programme, il suffit d'executer le programme nommer runScoring.py et mettre comme arguments:
 
 ```
@@ -44,7 +45,8 @@ python runScoring.py -in confs_withH/ -out ScoringCornell -prog NewScoringCornel
 
 
  
-#Argument RMSDFull.py
+#Argument et output RMSDFull.py:
+
 Pour executer ce programme, il suffit d'executer le programme nommer RMSDFull.py et mettre comme arguments:
 
 ```
