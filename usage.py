@@ -36,7 +36,7 @@ def usage1():
 
 
 def usage2():
-	usage2 = ("Ce programme calcul les RMSD entre le recepteurs natifs en fichier pdb et les differentes solutions presentes dans le repertoire -in fourni\n\n"
+	usage2 = ("Ce programme calcul les RMSD entre le complexe natif en fichier pdb et les differentes solutions presentes dans le repertoire -in fourni\n\n"
 			"Input = \n"
 			"\t-> -in:  repertoire contenant les differents fichiers pdb des solutions du ligand\n"
 			"\t-> -out: repertoire qui contiendra les sorties de donnees\n"
