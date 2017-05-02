@@ -19,7 +19,7 @@ Pour executer ce programme, il suffit d'executer le programme nommer runScoring.
 
 ```
 INput:
-	-in:  repertoire contenant les differents fichiers pdb des solutions du ligand
+	-in:  repertoire contenant les differents fichiers pdb des solutions du ligand (doit se terminer par: DP.pdb)
 	-out: repertoire qui contiendra les sorties de donnees
 	-prog: le programme avec le quelle les scores vont etre calculer,cet argument peut prendre l'une de ces 3 valeus:
 	(NewScoringCornell.py,NewScoringCornellAndDesolvation.py, OldScoringCornellAndDesolvation.py)
@@ -52,7 +52,7 @@ Pour executer ce programme, il suffit d'executer le programme nommer RMSDFull.py
 
 ```
 Input:
-	-in:  repertoire contenant les differents fichiers pdb des solutions du ligand
+	-in:  repertoire contenant les differents fichiers pdb des solutions du ligand (doit se terminer par: DP.pdb)
 	out: repertoire qui contiendra les sorties de donnees
 	-pdbR: fichier du recepteur natif
 	-pdbL: fichier du ligand natif
