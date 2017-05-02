@@ -118,8 +118,7 @@ f = open(nonTrier, "r")
 lines = f.readlines()
 f.close()
 
-#supprimer le fichier non trie
-os.system("rm -f %s"%(nonTrier)) 
+
 
 
 
@@ -230,3 +229,6 @@ if Ligand <> "" :
 
 	structureTools.writePDB(dPDB_Cplx_Natif,"%s/interfaceNatif.pdb"%(outdir),bfactor = True)
 	structureTools.writePDB(dPDB_Cplx_BestScore,"%s/interfaceBestScore.pdb"%(outdir),bfactor = True)
+
+#supprimer le fichier non trie
+os.system("rm -f %s"%(nonTrier)) 

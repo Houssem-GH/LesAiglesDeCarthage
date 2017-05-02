@@ -127,7 +127,7 @@ f = open(nonTrier, "r")
 lines = f.readlines()
 f.close()
 
-os.system("rm -f %s/RMSD.out"%(outdir)) #supprimer le fichier non trie
+
 
 #Stocker les resultats dans un dictionnaire
 dicoNT= {}
@@ -136,12 +136,10 @@ for line in lines:
 	valeur = float(valeur)
 	dicoNT[cle] = valeur
 	
-
 #Trier par Score les resultats de score dans une liste
 ListT=sorted(dicoNT.items(), key=lambda t: t[1])
 
-
-#Afficher les resultats de scoring par ordre croissant de score dans le fichier Scoring_Cornell
+#Afficher les resultats de scoring par ordre croissant de score dans le fichier RMSD_Full.out
 f_out = open("%s/RMSD_Full.out"%(outdir),"w")
 
 for res in ListT:	
@@ -149,5 +147,7 @@ for res in ListT:
 	
 f_out.close()
 
+ #supprimer le fichier non trie
+os.system("rm -f %s/RMSD.out"%(outdir))
 
 
