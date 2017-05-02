@@ -66,5 +66,6 @@ Output:
 Argument Obligatoire : -in, -out, -pdbL, -pdbR, -chainRec, -chainLig 
 
 ```
-Exemple de code: python runRMSDFull.py -in confs_withH/ -out RMSDFull -pdbR Rec_natif_DP.pdb -pdbL Lig_natif_DP_aligned.pdb 
+Exemple de code: python runRMSDFull.py -in confs_withH/ -out RMSDFull -pdbR Rec_natif_DP.pdb -pdbL Lig_natif_DP_aligned.pdb -chainRec B -chainLig D
+
 
