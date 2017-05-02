@@ -27,7 +27,6 @@ except:
 #repertoire de sortie a creer des resultats du calcul de scoring
 try:
     outdir = sys.argv[sys.argv.index("-out")+1]
-    longeur= len(outdir)+24
 except:    
     usage.usage1()
     print "ERROR: please, enter the name of the directory output"
@@ -55,12 +54,12 @@ except:
     sys.exit()
 
 
-#le fichier pdb du complexe natif
+#le fichier pdb du ligand natif
 try:
-    Complex = sys.argv[sys.argv.index("-pdbC")+1]
-    #cplx_natif.pdb
+    Ligand = sys.argv[sys.argv.index("-pdbL")+1]
+    #Lig_natif_DP_aligned.pdb
 except:
-	Complex = ""
+	Ligand = ""
 
 
 #la chaine d'acide amine du recepteur
@@ -91,14 +90,12 @@ except:
 #recuperer les noms des fichiers correspondant aux coordonnees du ligand dans une liste
 filelist = glob.glob("%s/*DP.pdb"%(indir)) 
 
-#suprimer le repertoire de sortie si elle existe
-os.system("rm -rf %s"%(outdir)) 
 
 #creer le repertoire de sortie
-os.system("mkdir %s"%(outdir)) 
+os.system("mkdir -p %s"%(outdir)) 
 
 #creer le repertoire fichier pdb des complexes theoriques
-os.system("mkdir %s/Rec_Lig_PDB"%(outdir)) 
+os.system("mkdir -p %s/Rec_Lig_PDB"%(outdir)) 
 
 
 #boucle de calcul de score de chaque fichier correspondant aux coordonnees du ligand par rapport au recepteur
@@ -165,12 +162,15 @@ elif Program_Scoring == "OldScoringCornellAndDesolvation.py":
 ########################
 
 
-if Complex <> "" :
+if Ligand <> "" :
+	#creeation du fichier Complexe.pdb
+	os.system("cat %s %s > %s/Complexe.pdb"%(Receptor,Ligand,outdir))
+	Complex="%s/Complexe.pdb"%(outdir)
 #Caclul de RMSD
 
 # parses the pdb file
 	dPDB_Cplx_BestScore = structureTools.parsePDBMultiChains(pdbinfile)
-	dPDB_Cplx_Natif = structureTools.parsePDBMultiChains("%s"%(Complex))
+	dPDB_Cplx_Natif = structureTools.parsePDBMultiChains(Complex)
 
 	dPDB_Lig_Natif={}
 	dPDB_Lig_Natif["chains"] = []

@@ -40,14 +40,14 @@ except:
     print "ERROR: please, enter the name of the receptor file"
     sys.exit()
 
-#le fichier pdb du complex natif
+#le fichier pdb du ligand natif
 try:
-    Complex = sys.argv[sys.argv.index("-pdbC")+1]
-    #cplx_natif.pdb
+    Ligand = sys.argv[sys.argv.index("-pdbL")+1]
+    #Lig_natif_DP_aligned.pdb
 except:
 	usage.usage2()
-	print "ERROR: please, enter the pdb file of the native complex"
-    sys.exit()
+	print "ERROR: please, enter the pdb name of the ligand PDF FILE"
+	sys.exit()
 
 #la chaine d'acide amine du recepteur
 try:
@@ -72,19 +72,20 @@ except:
 #recuperer les noms des fichiers correspondant aux coordonnees du ligand dans une liste
 filelist = glob.glob("%s/*DP.pdb"%(indir)) 
 
-#suprimer le repertoire de sortie si elle existe
-os.system("rm -rf %s"%(outdir)) 
-
 #creer le repertoire de sortie
-os.system("mkdir %s"%(outdir)) 
+os.system("mkdir -p %s"%(outdir)) 
 
 #creer le repertoire fichier pdb des complexes theoriques
-os.system("mkdir %s/Rec_Lig_PDB"%(outdir)) 
+os.system("mkdir -p %s/Rec_Lig_PDB"%(outdir)) 
+
+#creeation du fichier Complexe.pdb
+os.system("cat %s %s > %s/Complexe.pdb"%(Receptor,Ligand,outdir))
+Complex="%s/Complexe.pdb"%(outdir)
 
 
 #boucle de calcul de score de chaque fichier correspondant aux coordonnees du ligand par rapport au recepteur 
 #qui lui est fixe (Ex:fichier PDB: Rec_natif_DP)
-dPDB_Cplx_Natif = structureTools.parsePDBMultiChains("%s"%(Complex))
+dPDB_Cplx_Natif = structureTools.parsePDBMultiChains(Complex)
 dPDB_Lig_Natif={}
 dPDB_Lig_Natif["chains"] = []
 dPDB_Lig_Natif["chains"].append(chaineLig)

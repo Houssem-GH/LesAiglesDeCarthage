@@ -14,9 +14,9 @@ def usage1():
 			"\t-> -out: repertoire qui contiendra les sorties de donnees\n"
 			"\t-> -prog: le programme avec le quelle les scores vont etre calculer,cet argument peut prendre l'une de ces 3 valeus: (NewScoringCornell.py, NewScoringCornellAndDesolvation.py, OldScoringCornellAndDesolvation.py)\n"
 			"\t-> -pdbR: fichier du recepteur \n"
-			"\t-> -pdbC: fichier du complexe natif\n\n"
-			"\t-> -chainRec: preciser la chaine du recepteur"
-			"\t-> -chainLig: preciser la chaine du ligand" 
+			"\t-> -pdbL: fichier du Ligand natif aligne\n"
+			"\t-> -chainRec: preciser la chaine du recepteur\n"
+			"\t-> -chainLig: preciser la chaine du ligand\n\n" 
 			"Output = \n"
 			"\t->RMSD.out= un fichier contenant les differents RMSD calculer \n"
 			"\t->complexe_predit_score.pdb: un fichier pdb contenant le meilleur complexe predit \n"
@@ -26,7 +26,7 @@ def usage1():
 			"\t->Scoring: fichier contenant tous les scores triees dans l'ordre croissant des scores\n\n"
 			
 			"Argument Obligatoire : -in, -out, -prog, -pdbR, -chainRec, -chainLig\n"
-			"Argument Facultatif : -pdbC\n\n"  
+			"Argument Facultatif : -pdbL\n\n"  
 			)
 	
 	print usage1
@@ -41,14 +41,14 @@ def usage2():
 			"\t-> -in:  repertoire contenant les differents fichiers pdb des solutions du ligand\n"
 			"\t-> -out: repertoire qui contiendra les sorties de donnees\n"
 			"\t-> -pdbR: fichier du recepteur natif \n"
-			"\t-> -pdbC: fichier du complexe natif\n\n"
-			"\t-> -chainRec: preciser la chaine du recepteur"
-			"\t-> -chainLig: preciser la chaine du ligand" 
+			"\t-> -pdbL: fichier du Ligand natif aligne\n"
+			"\t-> -chainRec: preciser la chaine du recepteur\n"
+			"\t-> -chainLig: preciser la chaine du ligand\n\n" 
 			"Output = \n"
 			"\t->RMSD_Full.out= un fichier contenant les differentes RMSD calculee en ordre croissant \n"
-			"\t->Rec_Lig_PDB: repertoire contenenant tous les complexes theoriques pdb de tous les solutions pour la quelle un RMSD a ete calculer \n"
+			"\t->Rec_Lig_PDB: repertoire contenenant tous les complexes theoriques pdb de tous les solutions pour la quelle un RMSD a ete calculer \n\n"
 			
-			"Argument Obligatoire : -in, -out, -pdbC, -pdbR, -chainRec, -chainLig\n" 
+			"Argument Obligatoire : -in, -out, -pdbL, -pdbR, -chainRec, -chainLig\n\n" 
 			)
 	
 	print usage2
