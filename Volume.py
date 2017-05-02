@@ -3,7 +3,8 @@
 
 ##Author: GHARBI Houssem / Timothee O'Donnell
 """
-implementation de parametres volumes necessaire au calcule de l'Energie de Desolvation 
+implementation de parametres volume necessaire au calcule de l'Energie de Desolvation
+
 """
 
 def Volume ():

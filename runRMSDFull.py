@@ -4,7 +4,8 @@
 #Author: GHARBI Houssem / Timothee O'Donnell
 """
 Description: Programme qui:
-- calcule RMSD pour toutes les solutions et rend un fichier trier par ordre croissant 
+- calcule RMSD pour toutes les solutions et renvoie un fichier trier par ordre croissant
+
 """
 
 import random, math, numpy, string, sys, glob, os
@@ -33,36 +34,33 @@ except:
 
 #le fichier pdb du recepteur natif
 try:
-    Receptor = sys.argv[sys.argv.index("-pdbR")+1]
+    Receptor = sys.argv[sys.argv.index("-pdbF")+1]
     #Rec_natif_DP.pdb
 except:    
     usage.usage2()
     print "ERROR: please, enter the name of the receptor file"
     sys.exit()
 
-#le fichier pdb du ligand natif
+#le fichier pdb du ligand natif #Lig_natif_DP_aligned.pdb
 try:
-    Ligand = sys.argv[sys.argv.index("-pdbL")+1]
-    #Lig_natif_DP_aligned.pdb
+    Ligand = sys.argv[sys.argv.index("-pdbV")+1]
 except:
 	usage.usage2()
 	print "ERROR: please, enter the pdb name of the ligand PDF FILE"
 	sys.exit()
 
-#la chaine d'acide amine du recepteur
+#la chaine d'acide amine du recepteur #B
 try:
-    chaineRec = sys.argv[sys.argv.index("-chainRec")+1]
-    #B
+    chaineRec = sys.argv[sys.argv.index("-chainF")+1]
 except:    
     usage.usage2()
     print "ERROR: please, enter the pdb name of the chain of the receptor"
     sys.exit()
 
 
-#la chaine d'acide amine du Ligand
+#la chaine d'acide amine du Ligand #D
 try:
-    chaineLig = sys.argv[sys.argv.index("-chainLig")+1]
-    #D
+    chaineLig = sys.argv[sys.argv.index("-chainV")+1] 
 except:    
     usage.usage2()
     print "ERROR: please, enter the pdb name of the chain of the ligand"
@@ -83,8 +81,8 @@ os.system("cat %s %s > %s/Complexe.pdb"%(Receptor,Ligand,outdir))
 Complex="%s/Complexe.pdb"%(outdir)
 
 
-#boucle de calcul de score de chaque fichier correspondant aux coordonnees du ligand par rapport au recepteur 
-#qui lui est fixe (Ex:fichier PDB: Rec_natif_DP)
+#Calcul de RMSD pour tous les solutions
+
 dPDB_Cplx_Natif = structureTools.parsePDBMultiChains(Complex)
 dPDB_Lig_Natif={}
 dPDB_Lig_Natif["chains"] = []
@@ -147,7 +145,7 @@ for res in ListT:
 	
 f_out.close()
 
- #supprimer le fichier non trie
+#Supprimer le fichier non trie
 os.system("rm -f %s/RMSD.out"%(outdir))
 
 

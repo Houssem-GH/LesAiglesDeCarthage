@@ -3,7 +3,8 @@
 
 ##Author: GHARBI Houssem / Timothee O'Donnell
 """
-implementation de parametres de atomique de deslovation necessaire au calcule de l'Energie de Desolvation 
+implementation de parametres de atomique de deslovation necessaire au calcule de l'Energie de Desolvation
+
 """
 
 def Atomic_solvation_parameter ():

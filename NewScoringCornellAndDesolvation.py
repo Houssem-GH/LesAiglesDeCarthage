@@ -3,6 +3,7 @@
 #Author: GHARBI Houssem / Timothee O'Donnell
 """
 Description: Calcule les scores selon l'equation de Cornell impliquant les termes non liees en plus de l'energie de desolvation
+
 """
 
 
@@ -72,7 +73,7 @@ def compInter(dPDB, threshold, mode, chain1, chain2) :
     return nbresInter                       
 
 
-
+#calcul de score selon l'équation de l'energie de Cornell
 def compEner(dPDB, chain1, chain2) :
 
     nbresInter = 0
@@ -153,7 +154,7 @@ def computeBij(d_atomi, d_atomj) :
 
     return Bij
 
-
+#ajoute les valeurs de charge au dictionnaire dPDB
 def computeChargesVdW(dPDB, dcharge, dvdw, depsilon, chain):
 
     first = True
@@ -326,8 +327,8 @@ except:
 
 dcharge = ForceField3.chargePDB()
 dvdw, depsilon = ForceField3.epsilon_vdw_PDB()
-dASP= ASP.Atomic_solvation_parameter() ##############################################################
-dVolume= Volume.Volume() ############################################################################
+dASP= ASP.Atomic_solvation_parameter() ##creation de dictionnaire contenant les valeurs de solvation des atomes
+dVolume= Volume.Volume() #creation de dictionnaire contenant les parametres de volumes des atomes
 
 
 # parses the pdb file

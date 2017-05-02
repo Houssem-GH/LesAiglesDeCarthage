@@ -20,7 +20,7 @@ def DistanceSquared(A,B):
 def RMSD (dPDB1,dPDB2,mode=all):
     """Computes The Root main square deviation of two versions of a protein 
         either for all atoms if mode = all in the chain or for specified
-        atoms such as CA for carbon  alpha"""
+        atoms such as CA for carbon alpha"""
     
     summ=0
     cmpt=0
@@ -39,27 +39,27 @@ def RMSD (dPDB1,dPDB2,mode=all):
             else :
                 for atom in dPDB1[chain][res]["atomlist"]:
                     if atom == mode:
-                        #~ print res
-                        #~ print dPDB1[chain][res][atom]
-                        #~ print dPDB2[chain][res][atom]
                         Distance_Au_Carre=DistanceSquared(dPDB1[chain][res][atom], dPDB2[chain][res][atom])
-                        #~ print Distance_Au_Carre
-                        #~ print "**"
                         summ+=Distance_Au_Carre
                         cmpt+=1
                 
                     
     return math.sqrt(float(summ)/float(cmpt))
-###################################################
 
 
+
+
+#fonction determination de l'interface
 def InterfacePDB(dPDB, threshold,mode,chain1,chain2) :
-#prend en argument un pdb parce dans un dictionnaire, 
-#un seuil de distance qui definie si un element fait 
-#partie de l'interface ou non (element definie par mode),
-#la distance est calcule entre les atomes issus de chain1 et chain2
-#du dictionnaire
-
+	
+    """
+    prend en argument:
+    -un pdb parce dans un dictionnaire
+    -un seuil de distance qui definie si un element fait partie de l'interface ou non (element definie par mode)
+    
+    la distance est calcule entre les atomes issus de chain1 et chain2 du dictionnaire
+    """	
+    
     dInterfacePDB={}
     dInterfacePDB["chains"] = []
     dInterfacePDB["chains"].append(chain1)
@@ -77,7 +77,9 @@ def InterfacePDB(dPDB, threshold,mode,chain1,chain2) :
                 dInterfacePDB[chain2]["reslist"].append(res2)
                 dInterfacePDB[chain2][res2]=dPDB[chain2][res2]
     return dInterfacePDB
-##############################
+    
+   
+   
 
 
 
@@ -227,8 +229,11 @@ def parsePDBMultiChains(infile) :
 
 
 def getGirationRadius(dPDB, CM):
-    """computes the radius of giration of the protein, means the distance between the center of mass
-       of the protein and the farthest atom of the CM.
+	
+    """
+    computes the radius of giration of the protein, means the distance between the center of mass
+    of the protein and the farthest atom of the CM.
+    
     """
 
     dmax = 0.0
@@ -260,6 +265,8 @@ def writePDB(dPDB, filout = "out.pdb", bfactor = False) :
                    fout.write("ATOM  %5s  %-4s%3s %s%4s    %8.3f%8.3f%8.3f  1.00  1.00 X X\n"%(dPDB[chain][res][atom]["id"], atom, dPDB[chain][res]["resname"],chain, res,dPDB[chain][res][atom]["x"], dPDB[chain][res][atom]["y"],dPDB[chain][res][atom]["z"] ))
                     
     fout.close()
+
+
 
 def initBfactor(dPDB):
 

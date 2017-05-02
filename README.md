@@ -19,14 +19,14 @@ Pour executer ce programme, il suffit d'executer le programme nommer runScoring.
 
 ```
 INput:
-	-in:  repertoire contenant les differents fichiers pdb des solutions du ligand (doit se terminer par: DP.pdb)
-	-out: repertoire qui contiendra les sorties de donnees
+	-in:  repertoire contenant les differents fichiers pdb des diffrents orientations du ligand (les fichiers pdb doivent avoir un nom de type: *_Num_DP.pdb)
+	-out: repertoire qui contiendra les sorties de donnees 
 	-prog: le programme avec le quelle les scores vont etre calculer,cet argument peut prendre l'une de ces 3 valeus:
 	(NewScoringCornell.py,NewScoringCornellAndDesolvation.py, OldScoringCornellAndDesolvation.py)
-	-pdbR: fichier du recepteur
-	-pdbL: fichier du ligand natif 
-	-chainRec: preciser la chaine du recepteur
-	-chainLig: preciser la chaine du ligand
+	-pdbF: fichier du recepteur (fixe)
+	-pdbV: fichier du ligand natif (variable)
+	-chainF: preciser la chaine du recepteur
+	-chainV: preciser la chaine du ligand
 
 Output:
 	complexe_predit_score.pdb: un fichier pdb contenant le meilleur complexe predit
@@ -35,14 +35,16 @@ Output:
 
 Output supplementaire si argument -pdbL ajoute: 
 	InterfaceNatif.pdb: fichier pdb dont les bfactors de tous les atomes sont 0 sauf ceux de l'interface qui vallent 1
-	InterfaceBestScore.pdb: fichier pdb dont les bfactors de tous les atomes vallent 0 sauf ceux de l'interface du complexe Natif qui 					vallent 1
+	InterfaceBestScore.pdb: fichier pdb dont les bfactors de tous les atomes vallent 0 sauf ceux de l'interface du complexe Natif qui vallent 1
 	Complexe.pdb: fichier reunissant le recepteur et le ligand fourni en argument
 	RMSD.out= un fichier contenant les differents RMSD calculer
-	Argument Obligatoire : -in, -out, -prog, -pdbR, -chainRec, -chainLig
-	Argument Facultatif : -pdbL
+	
+	
+Argument Obligatoire : -in, -out, -prog, -pdbF, -chainF, -chainV
+Argument Facultatif : -pdbV
 ```
 Exemple de code: 
-python runScoring.py -in confs_withH/ -out ScoringCornell -prog NewScoringCornell.py -pdbR Rec_natif_DP.pdb -pdbL Lig_natif_DP_aligned.pdb -chainRec B -chainLig D
+python runScoring.py -in confs_withH/ -out ScoringCornell -prog NewScoringCornell.py -pdbF Rec_natif_DP.pdb -pdbV Lig_natif_DP_aligned.pdb -chainF B -chainV D
 
 
  
@@ -52,20 +54,21 @@ Pour executer ce programme, il suffit d'executer le programme nommer RMSDFull.py
 
 ```
 Input:
-	-in:  repertoire contenant les differents fichiers pdb des solutions du ligand (doit se terminer par: DP.pdb)
+	-in:  repertoire contenant les differents fichiers pdb des solutions du ligand  (les fichiers pdb doivent avoir un nom de type: *_Num_DP.pdb)
 	out: repertoire qui contiendra les sorties de donnees
-	-pdbR: fichier du recepteur natif
-	-pdbL: fichier du ligand natif
-	-chainRec: preciser la chaine du recepteur
-	-chainLig: preciser la chaine du ligand
+	-pdbF: fichier du recepteur natif (doit se terminer par: DP.pdb)
+	-pdbV: fichier du ligand natif
+	-chainF: preciser la chaine du recepteur
+	-chainV: preciser la chaine du ligand
+	
 Output:
 	RMSD_Full.out= un fichier contenant les differentes RMSD calculee en ordre croissant
 	Rec_Lig_PDB: repertoire contenenant tous les complexes theoriques pdb de tous les solutions pour la quelle un RMSD a ete calculer
 	Complexe.pdb: fichier reunissant le recepteur et le ligand fourni en argument
 	
-Argument Obligatoire : -in, -out, -pdbL, -pdbR, -chainRec, -chainLig 
+Argument Obligatoire : -in, -out, -pdbV, -pdbF, -chainF, -chainV 
 
 ```
-Exemple de code: python runRMSDFull.py -in confs_withH/ -out RMSDFull -pdbR Rec_natif_DP.pdb -pdbL Lig_natif_DP_aligned.pdb -chainRec B -chainLig D
+Exemple de code: python runRMSDFull.py -in confs_withH/ -out RMSDFull -pdbF Rec_natif_DP.pdb -pdbV Lig_natif_DP_aligned.pdb -chainF B -chainV D
 
 

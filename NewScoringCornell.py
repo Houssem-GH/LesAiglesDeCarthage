@@ -4,6 +4,7 @@
 #Author: GHARBI Houssem / Timothee O'Donnell
 """
 Description: Calcule les scores selon l'equation de Cornell n'impliquant que les termes non liees
+
 """
 
 import random, math, numpy, string, sys
@@ -41,6 +42,7 @@ def usage():
 
 
 def compInter(dPDB, threshold, mode, chain1, chain2) :
+#	
     nbresInter = 0
     structureTools.initBfactor(dPDB)
     print dPDB["chains"]
@@ -73,8 +75,9 @@ def compInter(dPDB, threshold, mode, chain1, chain2) :
     return nbresInter                       
 
 
-
+#calcul de score selon l'Equation de l'energie de Cornell
 def compEner(dPDB, chain1, chain2) :
+	
     nbresInter = 0
     #structureTools.initBfactor(dPDB)
     #print dPDB["chains"]
@@ -143,9 +146,9 @@ def computeBij(d_atomi, d_atomj) :
 
     return Bij
 
-
+#ajoute les valeurs de charge au dictionnaire dPDB
 def computeChargesVdW(dPDB, dcharge, dvdw, depsilon, chain):
-
+ 
     first = True
     
     for resi in dPDB[chain]["reslist"] :

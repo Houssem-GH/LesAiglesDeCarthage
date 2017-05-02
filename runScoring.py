@@ -6,6 +6,7 @@
 Description: Programme principale qui:
 -Calcule les scores des solutions fournis en argument
 -Calcule les RMSD
+
 """
 
 import random, math, numpy, string, sys, glob, os
@@ -24,7 +25,7 @@ except:
     sys.exit()
 
     
-#repertoire de sortie a creer des resultats du calcul de scoring
+#repertoire de sortie a creer qui contiendra les fichiers pdb des resultats du calcul de scoring
 try:
     outdir = sys.argv[sys.argv.index("-out")+1]
 except:    
@@ -44,38 +45,34 @@ except:
     sys.exit()
 
 
-#le fichier pdb du recepteur natif
+#le fichier pdb du recepteur natif #Rec_natif_DP.pdb (FIXE)
 try:
-    Receptor = sys.argv[sys.argv.index("-pdbR")+1]
-    #Rec_natif_DP.pdb
+    Receptor = sys.argv[sys.argv.index("-pdbF")+1]
 except:    
     usage.usage1()
     print "ERROR: please, enter the name of the receptor file"
     sys.exit()
 
 
-#le fichier pdb du ligand natif
+#le fichier pdb du ligand natif #Lig_natif_DP_aligned.pdb
 try:
-    Ligand = sys.argv[sys.argv.index("-pdbL")+1]
-    #Lig_natif_DP_aligned.pdb
+    Ligand = sys.argv[sys.argv.index("-pdbV")+1]
 except:
 	Ligand = ""
 
 
-#la chaine d'acide amine du recepteur
+#la chaine d'acide amine du recepteur #B
 try:
-    chaineRec = sys.argv[sys.argv.index("-chainRec")+1]
-    #B
+    chaineRec = sys.argv[sys.argv.index("-chainF")+1]
 except:    
     usage.usage1()
     print "ERROR: please, enter the pdb name of the chain of the receptor"
     sys.exit()
 
 
-#la chaine d'acide amine du Ligand
+#la chaine d'acide amine du Ligand #D
 try:
-    chaineLig = sys.argv[sys.argv.index("-chainLig")+1]
-    #D
+    chaineLig = sys.argv[sys.argv.index("-chainV")+1]
 except:    
     usage.usage1()
     print "ERROR: please, enter the pdb name of the chain of the ligand"
@@ -87,7 +84,8 @@ except:
 
 
 
-#recuperer les noms des fichiers correspondant aux coordonnees du ligand dans une liste
+#recuperer les noms des fichiers pdb  correspondant aux differents orientations du ligand dans une liste
+# les fichiers pdb doivent avoir un nom de type: *_Num_DP.pdb
 filelist = glob.glob("%s/*DP.pdb"%(indir)) 
 
 
@@ -105,7 +103,7 @@ for pdb in filelist :
     curpdb = "rec_nat_lig_%s.pdb"%(num)
     os.system("cat %s %s > %s/Rec_Lig_PDB/%s"%(Receptor, pdb,outdir, curpdb))
     os.system("python %s -pdb %s/Rec_Lig_PDB/%s -chain1 %s -chain2 %s"%(Program_Scoring, outdir,curpdb,chaineRec,chaineLig))
- 
+    
 #recuperer les donnees de Scoring dans un nouveau fichier nonTrier
 if Program_Scoring == "NewScoringCornell.py":
 	nonTrier = "NewScoringCornell.out" 
@@ -113,12 +111,12 @@ elif Program_Scoring == "NewScoringCornellAndDesolvation.py":
 	nonTrier = "NewScoringCornellAndDesolvation.out"
 else:
 	nonTrier = "OldScoringCornellAndDesolvation.out"
+
+
 #lecture du fichier nonTrier
 f = open(nonTrier, "r")
 lines = f.readlines()
 f.close()
-
-
 
 
 
@@ -131,8 +129,10 @@ for line in lines:
 	dicoNT[cle] = valeur
 	
 
+
 #Trier par Score les resultats de score dans une liste
 ListT=sorted(dicoNT.items(), key=lambda t: t[1])
+
 
 
 #Afficher les resultats de scoring par ordre croissant de score dans le fichier Scoring_Cornell
@@ -142,6 +142,8 @@ for res in ListT:
 	f_out.write("%s : %f\n"%(res[0],res[1]))
 	
 f_out.close()
+
+
 
 
 #Creer le fichier du complex Recepteur-ligand selon la methode de calcul 
@@ -160,12 +162,15 @@ elif Program_Scoring == "OldScoringCornellAndDesolvation.py":
 
 ########################
 
+# Partie du programme qui calcul de RMSD si le ligand est fourni en argument
+
+#Creation du fichier pdb du complexe
 
 if Ligand <> "" :
-	#creeation du fichier Complexe.pdb
+	#creation du fichier Complexe.pdb
 	os.system("cat %s %s > %s/Complexe.pdb"%(Receptor,Ligand,outdir))
 	Complex="%s/Complexe.pdb"%(outdir)
-#Caclul de RMSD
+	
 
 # parses the pdb file
 	dPDB_Cplx_BestScore = structureTools.parsePDBMultiChains(pdbinfile)
@@ -182,12 +187,10 @@ if Ligand <> "" :
 	dPDB_Lig_Natif[chaineLig] = dPDB_Cplx_Natif[chaineLig]
 	dPDB_Lig_BestScore[chaineLig] = dPDB_Cplx_BestScore[chaineLig]
 
-
+	#Identification de l'interface
 	dPDB_Interface_Natif = structureTools.InterfacePDB(dPDB_Cplx_Natif , 5.0 , "atom", chaineRec , chaineLig)
-
-				
-
-
+	
+	#calcul de RMSD
 	RMSD_full_Cplx_CA = structureTools.RMSD(dPDB_Cplx_BestScore , dPDB_Cplx_Natif,"CA")
 	RMSD_full_Cplx_AllAtoms = structureTools.RMSD(dPDB_Cplx_BestScore , dPDB_Cplx_Natif)
 
@@ -200,7 +203,7 @@ if Ligand <> "" :
 	RMSD_Interface_Natif_AllAtoms = structureTools.RMSD(dPDB_Interface_Natif, dPDB_Cplx_BestScore)
 
 
-	#Ecrire les resultats dans un fichier out
+	#Ecrire les resultats dans un fichier RMSD.out
 	f= open("%s/RMSD.out"%(outdir),"w")
 
 	f.write("Meilleur Solution: %s\n\n"%(ListT[0][0]))
@@ -213,7 +216,7 @@ if Ligand <> "" :
 
 	f.close()
 
-
+	#Coloration de l'interface de contact
 	structureTools.initBfactor(dPDB_Cplx_Natif)
 
 	for chain in dPDB_Interface_Natif["chains"]:
@@ -229,6 +232,8 @@ if Ligand <> "" :
 
 	structureTools.writePDB(dPDB_Cplx_Natif,"%s/interfaceNatif.pdb"%(outdir),bfactor = True)
 	structureTools.writePDB(dPDB_Cplx_BestScore,"%s/interfaceBestScore.pdb"%(outdir),bfactor = True)
+
+
 
 #supprimer le fichier non trie
 os.system("rm -f %s"%(nonTrier)) 
